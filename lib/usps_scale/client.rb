@@ -8,6 +8,13 @@ module USPSScale
       end
 
       attr_accessor :api_user_id
+
+      def defaults
+        {
+          service: "Priority",
+          container: "Variable"
+        }
+      end
     end
   end
 end
