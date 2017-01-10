@@ -1,4 +1,4 @@
-module USPSScale
+module ShippingScale
   class Configuration < Struct.new(:user_id, :timeout, :testing, :zip_origin, :zip_destination)
     def initialize
       self.timeout = 5

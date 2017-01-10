@@ -1,17 +1,17 @@
 require "spec_helper"
 
-describe USPSScale::Request do
+describe ShippingScale::Request do
   let(:package_options) do 
     { weight: 1.5, length: 3, width: 2, height: 3, zip_origin: "66204", zip_destination: "63501" }
   end
 
   let(:package) do 
-    package = USPSScale::Package.new(package_options)
+    package = ShippingScale::Package.new(package_options)
   end
 
-  subject { USPSScale::Request.new(packages: [package]) }
+  subject { ShippingScale::Request.new(packages: [package]) }
 
-  before(:example) { USPSScale::Request.config }
+  before(:example) { ShippingScale::Request.config }
 
   describe ".config" do 
     it "sets class attributes with options given" do 
@@ -21,7 +21,7 @@ describe USPSScale::Request do
         secure: true
       }
 
-      req = USPSScale::Request
+      req = ShippingScale::Request
       req.config(options)
 
       expect(req.api).to eq(options[:api])
@@ -60,7 +60,7 @@ describe USPSScale::Request do
 
       response = subject.send!
 
-      expect(response.is_a?(USPSScale::Response)).to be true
+      expect(response.is_a?(ShippingScale::Response)).to be true
       expect(response.price).to eq(1.5)
     end
   end

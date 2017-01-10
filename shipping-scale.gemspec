@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'usps_scale/version'
+require 'shipping_scale/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "usps-scale"
-  spec.version       = USPSScale::VERSION
+  spec.name          = "shipping-scale"
+  spec.version       = ShippingScale::VERSION
   spec.authors       = ["Josh Reinhardt"]
   spec.email         = ["joshua.e.reinhardt@gmail.com"]
 

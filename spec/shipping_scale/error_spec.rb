@@ -1,7 +1,7 @@
 require "spec_helper"
 
-describe USPSScale::Error do 
-  subject { USPSScale::Error }
+describe ShippingScale::Error do 
+  subject { ShippingScale::Error }
 
   describe "#initialize" do 
     it "#sets attributes based on error given" do
@@ -23,13 +23,13 @@ describe USPSScale::Error do
     it "raises an InvalidZipError when auth error is given" do 
       code = "-2147219497"
 
-      expect { raise subject.for_code(code).new(message, code, source) }.to raise_error(USPSScale::InvalidZipDestinationError)
+      expect { raise subject.for_code(code).new(message, code, source) }.to raise_error(ShippingScale::InvalidZipDestinationError)
     end
 
     it "raises an AuthorizationError when zip error is given" do 
       code = "-2147219498"
 
-      expect { raise subject.for_code(code).new(message, code, source) }.to raise_error(USPSScale::AuthorizationError)
+      expect { raise subject.for_code(code).new(message, code, source) }.to raise_error(ShippingScale::AuthorizationError)
     end
 
     # TODO: Get other error codes 

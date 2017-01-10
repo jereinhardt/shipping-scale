@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
-require "usps_scale"
+require "shipping_scale"
 
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
@@ -13,18 +13,18 @@ require "usps_scale"
 require "irb"
 IRB.start
 
-require "usps_scale"
+require "shipping_scale"
 
-# USPSScale.config
-# USPSScale::Request.config
+# ShippingScale.config
+# ShippingScale::Request.config
 
 # package1_options = { weight: 1.5, length: 3, width: 2, height: 3, zip_origin: "66204", zip_destination: "63501" }
 # package2_options = { weight: 2.5, length: 1, width: 2, height: 5, zip_origin: "63501", zip_destination: "66204" }
-# package_1 = USPSScale::Package.new(package1_options)
-# package_2 = USPSScale::Package.new(package2_options)
+# package_1 = ShippingScale::Package.new(package1_options)
+# package_2 = ShippingScale::Package.new(package2_options)
 # packages = [package_1, package_2]
 
-# request = USPSScale.new(packages: packages)
+# request = ShippingScale.new(packages: packages)
 
 # xml = request.build
 

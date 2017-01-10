@@ -1,3 +1,3 @@
-module USPSScale
+module ShippingScale
   VERSION = "0.1.0"
 end

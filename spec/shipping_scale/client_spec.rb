@@ -1,23 +1,23 @@
 require "spec_helper"
 
-describe USPSScale::Client do
-  subject { USPSScale::Client.new }
+describe ShippingScale::Client do
+  subject { ShippingScale::Client.new }
 
   before(:each) do 
-    USPSScale.configure { |c| c.testing = true }
+    ShippingScale.configure { |c| c.testing = true }
   end
   
   describe "#request" do
 
     it "sends an xml request to the USPS API server and receives a response" do
-      USPSScale::Request.config
+      ShippingScale::Request.config
 
       return_xml = Builder::XmlMarkup.new(indent: 0)
       return_xml.tag!("Package") do |xml|
         xml.tag!("Postage", "1.50")
       end
 
-      request = instance_double("USPSScale::Request")
+      request = instance_double("ShippingScale::Request")
       allow(request).to receive(:secure?).and_return(false)
       allow(request).to receive(:api).and_return("RateV4")
       allow(request).to receive(:build)
@@ -25,7 +25,7 @@ describe USPSScale::Client do
 
       response = subject.request(request)
 
-      expect(response.is_a?(USPSScale::Response)).to be true
+      expect(response.is_a?(ShippingScale::Response)).to be true
       expect(response.price).to eq(1.5)
     end
 
@@ -37,20 +37,20 @@ describe USPSScale::Client do
         xml.tag!("Source", "Zip Code")
       end
 
-      request = instance_double("USPSScale::Request")
+      request = instance_double("ShippingScale::Request")
       allow(request).to receive(:secure?).and_return(false)
       allow(request).to receive(:api).and_return("RateV4")
       allow(request).to receive(:build)
 
       allow(Typhoeus::Request).to receive(:get).and_return(return_xml)
 
-      expect{ subject.request(request) }.to raise_error(USPSScale::InvalidZipDestinationError)
+      expect{ subject.request(request) }.to raise_error(ShippingScale::InvalidZipDestinationError)
     end
   end
 
   describe "#testing?" do 
-    it "returns bool based on the configuration of USPSScale object" do 
-      USPSScale.testing = true
+    it "returns bool based on the configuration of ShippingScale object" do 
+      ShippingScale.testing = true
 
       expect(subject.testing?).to be true
     end
@@ -59,28 +59,28 @@ describe USPSScale::Client do
   describe "#server" do 
     it "returns a secure path when the request is secure" do 
       secure_path = "https://secure.shippingapis.com/ShippingAPI.dll"
-      USPSScale::Request.config(secure: true)
-      USPSScale.testing = false
+      ShippingScale::Request.config(secure: true)
+      ShippingScale.testing = false
 
-      server = subject.server(USPSScale::Request.new)
+      server = subject.server(ShippingScale::Request.new)
       expect(server).to eq(secure_path)
     end
 
     it "returns a testing path when in a testing evironment" do 
       test_path = "http://testing.shippingapis.com/ShippingAPI.dll"
-      USPSScale::Request.config(secure: false)
-      USPSScale.testing = true
+      ShippingScale::Request.config(secure: false)
+      ShippingScale.testing = true
 
-      server = subject.server(USPSScale::Request.new)
+      server = subject.server(ShippingScale::Request.new)
       expect(server).to eq(test_path)
     end
 
     it "returns the production path when not secure or in testing" do 
       prod_path = "http://production.shippingapis.com/ShippingAPI.dll"
-      USPSScale::Request.config(secure: false)
-      USPSScale.testing = false
+      ShippingScale::Request.config(secure: false)
+      ShippingScale.testing = false
 
-      server = subject.server(USPSScale::Request.new)
+      server = subject.server(ShippingScale::Request.new)
       expect(server).to eq(prod_path)
     end
   end

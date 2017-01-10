@@ -1,4 +1,4 @@
-module USPSScale
+module ShippingScale
   class Request
     class << self
       attr_reader :api, :tag, :secure
@@ -30,14 +30,14 @@ module USPSScale
     end
 
     def build
-      xml.tag!(self.class.tag, USERID: USPSScale.config.user_id) do |req|
+      xml.tag!(self.class.tag, USERID: ShippingScale.config.user_id) do |req|
         req.tag!("Revision", "2")
         packages_to_xml(req)
       end 
     end
 
     def send!
-      USPSScale.client.request(self)
+      ShippingScale.client.request(self)
     end
 
     private 

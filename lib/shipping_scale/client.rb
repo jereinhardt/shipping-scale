@@ -1,12 +1,12 @@
 require "typhoeus"
 
-module USPSScale
+module ShippingScale
   class Client
     def request(request)
       server = server(request)
 
       response = Typhoeus::Request.get(server, {
-        timeout: USPSScale.config.timeout,
+        timeout: ShippingScale.config.timeout,
         params: {
           "API" => request.api,
           "XML" => request.build
@@ -19,14 +19,14 @@ module USPSScale
         why = error.search("Description").children.first
         code = error.search("Number").children.first.to_s
         source = error.search("Source").children.first
-        raise USPSScale::Error.for_code(code).new(why, code, source)
+        raise ShippingScale::Error.for_code(code).new(why, code, source)
       end
 
-      USPSScale::Response.parse(xml)
+      ShippingScale::Response.parse(xml)
     end
 
     def testing?
-      USPSScale.config.testing?
+      ShippingScale.config.testing?
     end
 
     def server(request)

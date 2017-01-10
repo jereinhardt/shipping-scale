@@ -1,4 +1,4 @@
-module USPSScale
+module ShippingScale
   class Response
     attr_accessor :raw
 

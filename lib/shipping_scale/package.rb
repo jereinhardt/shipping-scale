@@ -1,4 +1,4 @@
-module USPSScale
+module ShippingScale
   class Package
     def initialize(**options)
       @weight = options[:weight]
@@ -7,8 +7,8 @@ module USPSScale
       @length = options[:length]
       @width = options[:width]
       @height = options[:height]
-      @zip_origin = (options[:zip_origin]) ? options[:zip_origin] : USPSScale.config.zip_origin 
-      @zip_destination = (options[:zip_destination]) ? options[:zip_destination] : USPSScale.config.zip_destination
+      @zip_origin = (options[:zip_origin]) ? options[:zip_origin] : ShippingScale.config.zip_origin 
+      @zip_destination = (options[:zip_destination]) ? options[:zip_destination] : ShippingScale.config.zip_destination
 
       @attrs = options
     end
@@ -21,8 +21,8 @@ module USPSScale
     end
 
     def get_price!(options = {})
-      USPSScale::Request.config(options)
-      USPSScale::Request.new(packages: [self]).send!     
+      ShippingScale::Request.config(options)
+      ShippingScale::Request.new(packages: [self]).send!     
     end
 
     #TODO set methods to determin service, container, and size

@@ -1,9 +1,9 @@
 require "spec_helper"
 
-describe USPSScale::Configuration do
+describe ShippingScale::Configuration do
   describe "#initialize" do
     it "sets default configurations" do
-      config = USPSScale.config
+      config = ShippingScale.config
 
       expect(config.timeout).to eq(5)
       expect(config.testing).to eq(false)
@@ -19,7 +19,7 @@ describe USPSScale::Configuration do
       zip_origin = "66204"
       zip_destination = "63501"
 
-      USPSScale.configure do |config|
+      ShippingScale.configure do |config|
         config.user_id = user_id
         config.timeout = timeout
         config.testing = testing
@@ -27,7 +27,7 @@ describe USPSScale::Configuration do
         config.zip_destination = zip_destination
       end
 
-      configurations = USPSScale.config
+      configurations = ShippingScale.config
 
       expect(configurations.user_id).to eq(user_id)
       expect(configurations.timeout).to eq(timeout)
@@ -39,10 +39,10 @@ describe USPSScale::Configuration do
 
   describe "#testing=" do 
     it "sets the testing enviornment" do 
-      config = USPSScale.config
-      USPSScale.testing = true
+      config = ShippingScale.config
+      ShippingScale.testing = true
 
-      expect(USPSScale.config.testing).to be true
+      expect(ShippingScale.config.testing).to be true
     end
   end
 end

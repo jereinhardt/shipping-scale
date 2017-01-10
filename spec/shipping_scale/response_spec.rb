@@ -1,7 +1,7 @@
 require "spec_helper"
 
-describe USPSScale::Response do 
-  subject { USPSScale::Response }
+describe ShippingScale::Response do 
+  subject { ShippingScale::Response }
   describe ".parse" do 
     it "returns a new Response object" do 
       xml = Builder::XmlMarkup.new(indent: 0)
@@ -42,7 +42,7 @@ describe USPSScale::Response do
         postage: "1.50",
       }
 
-      response = USPSScale::Response.parse(xml)
+      response = ShippingScale::Response.parse(xml)
 
       expect(response.details).to eq(details_hash)
     end
@@ -56,7 +56,7 @@ describe USPSScale::Response do
       end
       xml = Nokogiri::XML.parse(xml)
 
-      response = USPSScale::Response.parse(xml)
+      response = ShippingScale::Response.parse(xml)
 
       expect(response.price).to eq(1.5)
     end

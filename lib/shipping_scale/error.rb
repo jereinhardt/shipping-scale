@@ -1,4 +1,4 @@
-module USPSScale
+module ShippingScale
   class Error < StandardError
     attr_reader :code, :source
 

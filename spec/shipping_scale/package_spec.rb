@@ -1,7 +1,7 @@
 require "spec_helper"
 
-describe USPSScale::Package do 
-  subject { USPSScale::Package }
+describe ShippingScale::Package do 
+  subject { ShippingScale::Package }
 
   let(:package_options) do 
     { weight: 1.5, length: 3, width: 2, height: 3, zip_origin: "66204", zip_destination: "63501" }
@@ -12,7 +12,7 @@ describe USPSScale::Package do
       new_zip_dest = "94111"
       new_zip_origin = "54065"
 
-      USPSScale.configure do |config|
+      ShippingScale.configure do |config|
         config.zip_destination = new_zip_dest
         config.zip_origin = new_zip_origin
       end
