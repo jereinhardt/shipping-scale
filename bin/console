@@ -12,3 +12,20 @@ require "usps_scale"
 
 require "irb"
 IRB.start
+
+require "usps_scale"
+
+# USPSScale.config
+# USPSScale::Request.config
+
+# package1_options = { weight: 1.5, length: 3, width: 2, height: 3, zip_origin: "66204", zip_destination: "63501" }
+# package2_options = { weight: 2.5, length: 1, width: 2, height: 5, zip_origin: "63501", zip_destination: "66204" }
+# package_1 = USPSScale::Package.new(package1_options)
+# package_2 = USPSScale::Package.new(package2_options)
+# packages = [package_1, package_2]
+
+# request = USPSScale.new(packages: packages)
+
+# xml = request.build
+
+# puts xml

@@ -30,8 +30,8 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "builder", "~> 2.0"
-  spec.add_dependency "going_postal"
-  # spec.add_dependency "net/http"
+  spec.add_runtime_dependency "nokogiri", ">= 1.4.1"
+  spec.add_runtime_dependency "typhoeus", ">= 0.1.18"
 
   spec.add_development_dependency "bundler", "~> 1.13"
   spec.add_development_dependency "rake", "~> 10.0"

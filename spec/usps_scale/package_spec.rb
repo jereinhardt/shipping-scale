@@ -1,85 +1,67 @@
 require "spec_helper"
 
 describe USPSScale::Package do 
-  let(:api_key) { "" }
+  subject { USPSScale::Package }
 
-  let(:attributes) do 
-    {
-      weight: 5,
-      length: 1,
-      width: 3,
-      height: 5,
-      zip_destination: "63501",
-      zip_origin: "66204"
-    }
+  let(:package_options) do 
+    { weight: 1.5, length: 3, width: 2, height: 3, zip_origin: "66204", zip_destination: "63501" }
   end
 
-  before(:example) do 
-    USPSScale::Client.configure do |config|
-      config.api_user_id = api_key 
-    end
-  end
+  describe "initialize" do 
+    it "sets zip_destination and zip_origin to config variables if set" do 
+      new_zip_dest = "94111"
+      new_zip_origin = "54065"
 
-  describe "#initialize" do
-    subject { USPSScale::Package.new(attributes) }
+      USPSScale.configure do |config|
+        config.zip_destination = new_zip_dest
+        config.zip_origin = new_zip_origin
+      end
 
-    it "sets @api_user_id passed down from the client" do
-      key = subject.instance_variable_get("@api_user_id")
+      options = {weight: 1.5, length: 3, width: 2, height: 3}
+      package = subject.new(options)
 
-      expect(key).to eq(api_key)
-    end
-
-    it "sets attributes passed down from the client" do 
-      expect(subject.attributes[:service]).to eq("Priority")
-    end
-
-    it "overrides attributes passed down from the client when arguments are given" do 
-      service = "First Class Package"
-      new_defaults = {service: service}
-      new_attributes = attributes.merge(new_defaults)
-      package = USPSScale::Package.new(new_attributes)
-
-      expect(package.attributes[:service]).to eq(service)
-    end
-
-    it "sets package weight, length, width, height, zip origin, and zip dest." do 
-      expect(subject.weight).to eq(attributes[:weight])
-      expect(subject.length).to eq(attributes[:length])
-      expect(subject.width).to eq(attributes[:width])
-      expect(subject.height).to eq(attributes[:height])
-      expect(subject.zip_destination).to eq(attributes[:zip_destination])
-      expect(subject.zip_origin).to eq(attributes[:zip_origin])
-    end
-  end
-
-  describe "#valid_zip_codes?" do 
-    it "makes sure the zip destination and origin are valid" do 
-      package = USPSScale::Package.new(attributes)
-
-      expect(package.valid_zip_codes?).to be_truthy
-    end
-
-    it "returns falase when one or both zip codes are not valid" do
-      new_attrs = attributes.merge({zip_origin: 1, zip_destination: 3})
-      package = USPSScale::Package.new(new_attrs)
-
-      expect(package.valid_zip_codes?).to be_falsey
+      expect(package.instance_variable_get("@zip_origin")).to eq(new_zip_origin)
+      expect(package.instance_variable_get("@zip_destination")).to eq(new_zip_dest)        
     end
   end
 
   describe "#build_xml" do 
-    subject { USPSScale::Package.new(attributes) }
+    it "builds a xml to represent package inside of existing xml data" do 
+      package = subject.new(package_options)
 
-    it "craeats an xml object" do 
-      x = subject.build_xml(target: STDOUT, indent: 2)
-      x
+      xml = Builder::XmlMarkup.new(indent: 0)
+
+
+      request = xml.tag!('V4RATE', USERID: "0000") do |req|
+        req.tag!("Package", ID: "1") do |pac| 
+          pac.tag!("Service", "All")
+          pac.tag!("Container", "VARAIBLE")
+          pac.tag!("Size", "REGULAR")
+          package_options.each { |k, v| pac.tag!(k.to_s, v) }
+        end
+      end
+
+      package_request = xml.tag!('V4RATE', USERID: "0000") do |req|
+        req.tag!("Package", ID: "1") do |pac|
+          package.build_xml(pac)
+        end
+      end
+
+      expect(request).to eq(package_request)
     end
   end
 
-  describe "#send_request" do
-    subject { USPSScale::Package.new(attributes.merge({api_user_id: ENV.fetch("USPS_USER_ID")})) }
+  describe "#get_price!" do 
+    it "sends a request and returns a response" do
+      package = subject.new(package_options)
 
-    it "sends an xml request, and receives a valid response" do
+      xml = Builder::XmlMarkup.new(indent: 0)
+      xml.tag!("Package") { |t| t.tag!("Postage", "15.00") }
+      allow(Typhoeus::Request).to receive(:get).and_return(xml)
+
+      response = package.get_price!
+
+      expect(response.price).to eq(15.0)
     end
   end
 end
