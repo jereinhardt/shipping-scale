@@ -59,9 +59,9 @@ describe ShippingScale::Package do
       xml.tag!("Package") { |t| t.tag!("Postage", "15.00") }
       allow(Typhoeus::Request).to receive(:get).and_return(xml)
 
-      response = package.get_price!
+      package.get_price!
 
-      expect(response.price).to eq(15.0)
+      expect(package.price).to eq(15.0)
     end
   end
 end

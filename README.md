@@ -1,8 +1,6 @@
 # ShippingScale
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/shipping_scale`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+ShippingScale is a simple interface with the USPS Price Calculator API.  With it, you can quickly and easily calculate postage prices for packages.
 
 ## Installation
 
@@ -10,6 +8,9 @@ Add this line to your application's Gemfile:
 
 ```ruby
 gem 'shipping-scale'
+
+# or from the github repository
+gem 'shipping-scale', :git => 'https://github.com/jereinhardt/shipping-scale.git'
 ```
 
 And then execute:
@@ -20,22 +21,50 @@ Or install it yourself as:
 
     $ gem install shipping-scale
 
+## Setup
+
+In order to properly configure your interface, you must first have a registered developer account with the US Postal Service.  
+
+Add an initializer to your application and configure it to use your API USER ID
+
+```ruby 
+ShippingScale.configure do |config|
+  config.user_id = ENV.["USPS_USER_ID"]
+  config.timeout = 5
+  config.testing = false
+end
+```
+
 ## Usage
 
-TODO: Write usage instructions here
+If you have all of the necessary information for the package you want to ship, using the gem is as simples as creating an instance of `ShipingScale::Package` and using `#get_price!`.  Other details are also returned with this method.
 
-## Development
+```ruby
+package_options = { 
+  weight: 1,
+  length: 3,
+  width: 2,
+  height: 3,
+  zip_origin: "66204",
+  zip_destination: "63501" 
+}
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+package = ShippingScale::Package.new(package_options)
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+package.get_price!
 
-## Contributing
+# for the floating point value of postage
+package.price # => 15
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/shipping-scale.
+# for other details sent back from the request
+package.details # => { zip_origination: "66204", zip_destination: "63501", pounds: "1", ... }
+```
 
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/jereinhardt/shipping-scale.
+
 

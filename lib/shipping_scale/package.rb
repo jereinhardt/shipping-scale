@@ -12,6 +12,8 @@ module ShippingScale
 
       @attrs = options
     end
+
+    attr_accessor :response
     
     def build_xml(package) 
       package.tag!("Service", "All")
@@ -22,7 +24,15 @@ module ShippingScale
 
     def get_price!(options = {})
       ShippingScale::Request.config(options)
-      ShippingScale::Request.new(packages: [self]).send!     
+      @response = ShippingScale::Request.new(packages: [self]).send!     
+    end
+
+    def price 
+      response.price
+    end
+
+    def details
+      response.details
     end
 
     #TODO set methods to determin service, container, and size
