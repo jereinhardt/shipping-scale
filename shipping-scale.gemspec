@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["joshua.e.reinhardt@gmail.com"]
 
   spec.summary       = %q{A simple Ruby API wrapper for the USPS price calculator API}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/jereinhardt/shipping-scale"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
