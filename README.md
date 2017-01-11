@@ -29,7 +29,7 @@ Add an initializer to your application and configure it to use your API USER ID
 
 ```ruby 
 ShippingScale.configure do |config|
-  config.user_id = ENV.["USPS_USER_ID"]
+  config.user_id = ENV["USPS_USER_ID"]
   config.timeout = 5
   config.testing = false
 end
