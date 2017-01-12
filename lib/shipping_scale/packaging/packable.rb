@@ -1,10 +1,10 @@
 module ShippingScale
-  class Packaging
+  module Packable
     attr_accessor :response, :packages
 
     def get_price!(options = {})
       ShippingScale::Request.config(options)
-      @response = ShippingScale::Request.new(packages: packages).send!     
+      @response = ShippingScale::Request.new(packages: packages).send!
     end
 
     def price

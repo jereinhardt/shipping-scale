@@ -1,5 +1,6 @@
 module ShippingScale
-  class Package < Packaging
+  class Package
+    include Packable
 
     class << self
       def shipment(details)

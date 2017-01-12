@@ -11,7 +11,7 @@ module ShippingScale
   autoload :Configuration,   "shipping_scale/configuration"
   autoload :Error,           "shipping_scale/error"
   autoload :Package,         "shipping_scale/packaging/package"
-  autoload :Packaging,       "shipping_scale/packaging/packaging"
+  autoload :Packable,        "shipping_scale/packaging/packable"
   autoload :Request,         "shipping_scale/request"
   autoload :Response,        "shipping_scale/response"
   autoload :Shipment,        "shipping_scale/packaging/shipment"

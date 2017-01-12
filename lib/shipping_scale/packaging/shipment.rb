@@ -1,5 +1,7 @@
 module ShippingScale
-  class Shipment < Packaging
+  class Shipment
+    include Packable
+
     def initialize(packages)
       @packages = packages
     end
