@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe ShippingScale::Request do
   let(:package_options) do 
-    { weight: 1.5, length: 3, width: 2, height: 3, zip_origin: "66204", zip_destination: "63501" }
+    { zip_origination: "66204", zip_destination: "63501", pounds: 2, ounces: 2 }
   end
 
   let(:package) do 
@@ -38,13 +38,17 @@ describe ShippingScale::Request do
         req.tag!("Revision", "2")
         req.tag!("Package", ID: "1") do |pac| 
           pac.tag!("Service", "All")
-          pac.tag!("Container", "VARAIBLE")
-          pac.tag!("Size", "REGULAR")
-          package_options.each { |k, v| pac.tag!(k.to_s, v) }
+          package_options.each { |k, v| pac.tag!(k.to_s.upper_camelcase, v) }
+          pac.tag!("Container", "VARIABLE")
+          pac.tag!("Size", "Regular")
+          pac.tag!("Machinable", "true")
         end
       end
 
-      request_xml = subject.build
+      request_xml = subject.build.body.clean_xml
+
+      puts request_xml
+      puts package_xml
 
       expect(request_xml).to eq(package_xml)
     end
@@ -54,7 +58,9 @@ describe ShippingScale::Request do
     it "sends the request and returns the response object" do 
       return_xml = Builder::XmlMarkup.new(indent: 0)
       return_xml.tag!("Package") do |t| 
-        t.tag!("Postage", "1.50")
+        t.tag!("Postage", CLASSID: "1") do |n|
+          n.tag!("Rate", "1.50")
+        end
       end
       allow(Typhoeus::Request).to receive(:get).and_return(return_xml)
 

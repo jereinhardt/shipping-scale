@@ -4,23 +4,42 @@ describe ShippingScale::Package do
   subject { ShippingScale::Package }
 
   let(:package_options) do 
-    { weight: 1.5, length: 3, width: 2, height: 3, zip_origin: "66204", zip_destination: "63501" }
+    { weight: 1.5, length: 3, width: 2, height: 3, zip_origination: "66204", zip_destination: "63501" }
   end
 
-  describe "initialize" do 
+  describe ".shipment" do
+    it "creates an shipment object to hold array of pakcages" do
+      package2_options = { weight: 2.6, length: 5, width: 6, height: 5, zip_origination: "90415", zip_destination: "66120" }
+
+      packages = [package_options, package2_options]
+      shipment = subject.shipment(packages)
+
+      package_zips = [
+        subject.new(package_options),
+        subject.new(package2_options)
+      ].map(&:zip_destination)
+
+      shipment_zips = shipment.packages.map(&:zip_destination)
+
+      expect(shipment.is_a?(ShippingScale::Shipment)).to be true
+      expect(shipment_zips).to match_array(package_zips)
+    end
+  end
+
+  describe "#initialize" do 
     it "sets zip_destination and zip_origin to config variables if set" do 
       new_zip_dest = "94111"
       new_zip_origin = "54065"
 
       ShippingScale.configure do |config|
         config.zip_destination = new_zip_dest
-        config.zip_origin = new_zip_origin
+        config.zip_origination = new_zip_origin
       end
 
       options = {weight: 1.5, length: 3, width: 2, height: 3}
       package = subject.new(options)
 
-      expect(package.instance_variable_get("@zip_origin")).to eq(new_zip_origin)
+      expect(package.instance_variable_get("@zip_origination")).to eq(new_zip_origin)
       expect(package.instance_variable_get("@zip_destination")).to eq(new_zip_dest)        
     end
   end
@@ -56,7 +75,11 @@ describe ShippingScale::Package do
       package = subject.new(package_options)
 
       xml = Builder::XmlMarkup.new(indent: 0)
-      xml.tag!("Package") { |t| t.tag!("Postage", "15.00") }
+      xml.tag!("Package") do |t| 
+        t.tag!("Postage", CLASSID: "1") do |n|
+          n.tag!("Rate", "15.00")
+        end
+      end
       allow(Typhoeus::Request).to receive(:get).and_return(xml)
 
       package.get_price!

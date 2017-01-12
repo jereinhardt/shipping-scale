@@ -37,14 +37,12 @@ end
 
 ## Usage
 
-If you have all of the necessary information for the package you want to ship, using the gem is as simples as creating an instance of `ShipingScale::Package` and using `#get_price!`.  Other details are also returned with this method.
+If you have all of the necessary information for the package you want to ship, using the gem is as simple as creating an instance of `ShipingScale::Package` and using `#get_price!`.  Other details are also returned with this method.
 
 ```ruby
 package_options = { 
-  weight: 1,
-  length: 3,
-  width: 2,
-  height: 3,
+  pounds: 1,
+  ounces: 8, # or weight: 1.5
   zip_origin: "66204",
   zip_destination: "63501" 
 }
@@ -59,7 +57,7 @@ package.price # => 15
 # for other details sent back from the request
 package.details # => { zip_origination: "66204", zip_destination: "63501", pounds: "1", ... }
 ```
-
+Currently, all rates retreived from the USPS API are for 2-day Priority Mail only.
 
 ## License
 

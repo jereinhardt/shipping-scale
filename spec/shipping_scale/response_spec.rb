@@ -31,15 +31,19 @@ describe ShippingScale::Response do
         t.tag!("MailService", "First Class Mail")
         t.tag!("ZipOrigination", "66204")
         t.tag!("ZipDestination", "63501")
-        t.tag!("Postage", "1.50")
+        t.tag!("Postage", CLASSID: "1") do |n|
+          n.tag!("Name", "Priority First Class")
+          n.tag!("Rate", "1.50")
+        end
       end
-      xml = Nokogiri::XML.parse(xml)
+
+      xml = Nokogiri::XML.parse(xml.body)
 
       details_hash = {
         mail_service: "First Class Mail",
         zip_origination: "66204",
         zip_destination: "63501",
-        postage: "1.50",
+        postage: [{name: "Priority First Class", rate: "1.50"}],
       }
 
       response = ShippingScale::Response.parse(xml)
@@ -49,16 +53,50 @@ describe ShippingScale::Response do
   end
 
   describe "#price" do
-    it "returns the floating point price of postage" do
+    it "returns the floating point value for the total price of postage" do
       xml = Builder::XmlMarkup.new(indent: 0)
-      xml.tag!("Package") do |t|
-        t.tag!("Postage", "1.50")
+      xml.tag!("Return") do |n|
+        n.tag!("Package") do |t|
+          t.tag!("Postage", CLASSID: "1") do |n|
+            n.tag!("Rate", "1.50")
+          end
+        end
+        n.tag!("Package") do |t|
+          t.tag!("Postage", CLASSID: "1") do |n|
+            n.tag!("Rate", "3.00")
+          end
+        end
       end
-      xml = Nokogiri::XML.parse(xml)
+      xml = Nokogiri::XML.parse(xml.body)
 
       response = ShippingScale::Response.parse(xml)
 
-      expect(response.price).to eq(1.5)
+      expect(response.price).to eq(4.5)
+    end
+  end
+
+  describe "#prices" do
+    it "returns individual prices for each package in the request" do 
+      xml = Builder::XmlMarkup.new(indent: 0)
+      xml.tag!("Return") do |n|
+        n.tag!("Package", ID: "1") do |t|
+          t.tag!("Postage", CLASSID: "1") do |n|
+            n.tag!("Rate", "1.50")
+          end
+        end
+        n.tag!("Package", ID: "2nd") do |t|
+          t.tag!("Postage", CLASSID: "1") do |n|
+            n.tag!("Rate", "3.00")
+          end
+        end
+      end
+      xml = Nokogiri::XML.parse(xml.body)
+      price_hash = {"1" => 1.5, "2nd" => 3.0} 
+
+      response = ShippingScale::Response.parse(xml)
+      prices = response.prices
+
+      expect(prices).to eq(price_hash)
     end
   end
 end

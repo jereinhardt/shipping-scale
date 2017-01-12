@@ -33,7 +33,8 @@ module ShippingScale
       xml.tag!(self.class.tag, USERID: ShippingScale.config.user_id) do |req|
         req.tag!("Revision", "2")
         packages_to_xml(req)
-      end 
+      end
+      xml
     end
 
     def send!

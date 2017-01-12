@@ -1,16 +1,20 @@
 require "shipping_scale/version"
 require "builder"
 require "nokogiri"
-require "snakecase_string"
+require "string_module"
+require "typhoeus"
+
 
 module ShippingScale 
 
   autoload :Client,          "shipping_scale/client"
   autoload :Configuration,   "shipping_scale/configuration"
+  autoload :Error,           "shipping_scale/error"
+  autoload :Package,         "shipping_scale/packaging/package"
+  autoload :Packaging,       "shipping_scale/packaging/packaging"
   autoload :Request,         "shipping_scale/request"
   autoload :Response,        "shipping_scale/response"
-  autoload :Error,           "shipping_scale/error"
-  autoload :Package,         "shipping_scale/package"
+  autoload :Shipment,        "shipping_scale/packaging/shipment"
 
   class << self 
     attr_writer :config

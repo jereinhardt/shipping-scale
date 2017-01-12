@@ -23,7 +23,7 @@ describe ShippingScale::Configuration do
         config.user_id = user_id
         config.timeout = timeout
         config.testing = testing
-        config.zip_origin = zip_origin
+        config.zip_origination = zip_origin
         config.zip_destination = zip_destination
       end
 
@@ -32,7 +32,7 @@ describe ShippingScale::Configuration do
       expect(configurations.user_id).to eq(user_id)
       expect(configurations.timeout).to eq(timeout)
       expect(configurations.testing).to eq(testing)
-      expect(configurations.zip_origin).to eq(zip_origin)
+      expect(configurations.zip_origination).to eq(zip_origin)
       expect(configurations.zip_destination).to eq(zip_destination)
     end
   end

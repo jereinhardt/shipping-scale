@@ -1,5 +1,5 @@
 module ShippingScale
-  class Configuration < Struct.new(:user_id, :timeout, :testing, :zip_origin, :zip_destination)
+  class Configuration < Struct.new(:user_id, :timeout, :testing, :zip_origination, :zip_destination)
     def initialize
       self.timeout = 5
       self.testing = false

@@ -1,15 +1,13 @@
-require "typhoeus"
-
 module ShippingScale
   class Client
     def request(request)
-      server = server(request)
+      server = "http://production.shippingapis.com/ShippingAPI.dll"
 
       response = Typhoeus::Request.get(server, {
         timeout: ShippingScale.config.timeout,
         params: {
           "API" => request.api,
-          "XML" => request.build
+          "XML" => request.build.body.clean_xml
         }
       })
 
