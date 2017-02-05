@@ -47,9 +47,6 @@ describe ShippingScale::Request do
 
       request_xml = subject.build.body.clean_xml
 
-      puts request_xml
-      puts package_xml
-
       expect(request_xml).to eq(package_xml)
     end
   end

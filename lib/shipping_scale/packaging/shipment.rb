@@ -7,7 +7,7 @@ module ShippingScale
     end
 
     def prices
-      response.prices
+      @_prices ||= response.nil? ? get_response.prices : response.prices
     end
   end
 end

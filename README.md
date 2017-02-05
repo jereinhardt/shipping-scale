@@ -49,14 +49,33 @@ package_options = {
 
 package = ShippingScale::Package.new(package_options)
 
-package.get_price!
-
-# for the floating point value of postage
+# for the value of postage on a single package
 package.price # => 15
 
 # for other details sent back from the request
 package.details # => { zip_origination: "66204", zip_destination: "63501", pounds: "1", ... }
 ```
+
+You can also get the price of multiple packages sent in the same shipment.  
+
+```ruby
+packages = [
+  {pounds: 1, ...},
+  {pounds: 5, ...}
+]
+
+shipment = ShippingScale::Package.shipment(packages)
+
+# for the total price of the shipment
+shipment.price # => 25
+
+# for the price of each individual package in the shipment, by package ID
+shipment.prices # => {"1" => 10, "2" => 15}
+
+# for details sent back by the request
+shipment.details # => { zip_origination: "66204", ... }
+```
+
 Currently, all rates retreived from the USPS API are for 2-day Priority Mail only.
 
 ## License

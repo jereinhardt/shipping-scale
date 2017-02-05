@@ -70,8 +70,8 @@ describe ShippingScale::Package do
     end
   end
 
-  describe "#get_price!" do 
-    it "sends a request and returns a response" do
+  describe "#price" do
+    it "returns the price of the package" do
       package = subject.new(package_options)
 
       xml = Builder::XmlMarkup.new(indent: 0)
@@ -81,8 +81,6 @@ describe ShippingScale::Package do
         end
       end
       allow(Typhoeus::Request).to receive(:get).and_return(xml)
-
-      package.get_price!
 
       expect(package.price).to eq(15.0)
     end
